@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Panos-Radio</title>
+    <style>
+       
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+       body, html {
+    width: 100%;
+    height: 100svh; 
+    
+   
+    background-image: url('https://i.ibb.co/v41wj4K9/9.png');
+    background-size: cover;       
+    background-position: center;   
+    background-repeat: no-repeat;  
+    
+    font-family: Arial, sans-serif;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+}
+
+       
+        .player-container {
+            width: 100%;
+            height: 100%;
+            max-width: 480px;
+            background: linear-gradient(180deg, #181822 0%, #0a0a0f 100%);
+            border-radius: 28px; 
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        
+        .widget-area {
+            width: 100%;
+            flex: 1;
+            position: relative;
+            background-color: #12121a;
+            border-top-left-radius: 28px;
+            border-top-right-radius: 28px;
+            overflow: hidden;
+        }
+
+        
+        .widget-iframe {
+            width: 100%;
+            height: 100%; 
+            border: none;
+            display: block;
+        }
+
+        
+        .controls-area {
+    width: 100%;
+    padding: 20px 20px 30px 20px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+    
+    background-image: url('https://i.imgur.com/95Wn7or.jpg');
+    background-size: cover;      
+    background-position: center;   
+    
+    border-bottom-left-radius: 28px;
+    border-bottom-right-radius: 28px;
+    position: relative;
+    z-index: 10; 
+    margin-top: -45px;
+    box-shadow: 0 -15px 30px rgba(10, 10, 15, 0.95); 
+}
+
+
+       
+        .title-mask-container {
+            width: 100%;         
+            max-width: 400px;
+            height: 60px;         
+            overflow: hidden;     
+            position: relative;
+            background: transparent; 
+            border: none;            
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px; 
+        }
+
+        #metadataIframe {
+            width: 600px;
+            height: 100px;
+            border: none;
+            position: absolute;
+            top: 15px;            
+            
+            transform: scale(1.6); 
+            transform-origin: left center;
+
+            
+            filter: invert(1) sepia(1) saturate(8) hue-rotate(145deg)
+                    drop-shadow(0px 0px 3px #00f5ff) 
+                    drop-shadow(0px 0px 8px #00adb5); 
+
+           
+            animation: marqueeEffect 12s linear infinite;
+        }
+
+       
+        @keyframes marqueeEffect {
+            0% {
+                left: 100%;
+            }
+            100% {
+                left: -140%;
+            }
+        }
+
+        
+        .action-row {
+            width: 100%;
+            max-width: 320px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 5px;
+        }
+
+        
+        .social-link {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.05);
+            transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+        }
+
+        
+        .social-link svg {
+            width: 24px;
+            height: 24px;
+            fill: #ffffff;
+            transition: fill 0.2s ease;
+            filter: drop-shadow(0px 0px 4px rgba(255, 255, 255, 0.3));
+        }
+
+       
+        
+       
+        .social-link.instagram:hover, .social-link.instagram:active {
+            background-color: rgba(251, 173, 80, 0.1);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(225, 48, 108, 0.4);
+        }
+        .social-link.instagram:hover svg, .social-link.instagram:active svg {
+            fill: url(#instaGradient); 
+            filter: drop-shadow(0px 0px 6px #e1306c);
+        }
+
+       
+        .social-link.facebook:hover, .social-link.facebook:active {
+            background-color: rgba(24, 119, 242, 0.1);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(24, 119, 242, 0.4);
+        }
+        .social-link.facebook:hover svg, .social-link.facebook:active svg {
+            fill: #1877f2; 
+            filter: drop-shadow(0px 0px 6px #1877f2);
+        }
+
+        .social-link:active {
+            transform: scale(0.95) !important;
+        }
+
+
+.btn-play-wrapper {
+    position: relative;
+    width: 76px;
+    height: 76px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.btn-play {
+    border: none;
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 5;
+    transition: background-color 0.4s ease, box-shadow 0.4s ease, transform 0.2s ease;
+}
+
+.btn-play:active {
+    transform: scale(0.92);
+}
+
+.btn-play svg {
+    width: 32px;
+    height: 32px;
+    transition: fill 0.3s ease;
+}
+
+
+.btn-play.ready {
+    background: #ff0000;
+    box-shadow: 0 0 15px #ff0000;
+    animation: redPulse 2s infinite ease-in-out;
+}
+.btn-play.ready svg {
+    fill: #ffffff;
+}
+
+
+.btn-play.loading {
+    background: #ff0000;
+    box-shadow: 0 0 20px #ff0000;
+    animation: redPulse 0.8s infinite ease-in-out;
+}
+.btn-play.loading svg {
+    fill: #ffffff;
+}
+
+
+.btn-play.playing {
+    background: #39ff14;
+    box-shadow: 0 0 20px #39ff14, inset 0 0 10px rgba(0,0,0,0.2);
+    animation: none;
+}
+.btn-play.playing svg {
+    fill: #14141c; 
+}
+
+
+.gold-ring {
+    position: absolute;
+    width: 86px;  
+    height: 86px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    border-top-color: #ffd700;
+    border-bottom-color: #ffd700;
+    z-index: 4;
+    opacity: 0; /* Κρυφό αρχικά */
+    transition: opacity 0.4s ease;
+}
+
+
+.btn-play.playing ~ .gold-ring {
+    opacity: 1;
+    animation: spinGold 2s linear infinite;
+}
+
+
+
+
+@keyframes redPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+    }
+    50% {
+        transform: scale(1.03);
+        box-shadow: 0 0 25px rgba(255, 0, 0, 1), 0 0 35px rgba(255, 0, 0, 0.5);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+    }
+}
+
+
+@keyframes spinGold {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+        
+        
+
+       
+
+#currentDate {
+    color: #0cfc08;
+    text-shadow: 0px 0px 6px rgba(255, 215, 0, 0.6);
+}
+
+
+#currentTime {
+    color: #fcfc08;
+    text-shadow: 0px 0px 6px #00f5ff;
+}
+
+.volume-container {
+    width: 100%;
+    max-width: 320px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.volume-label {
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-shadow: 0px 0px 5px rgba(255, 255, 255, 0.4);
+}
+
+
+.slider-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    height: 25px;
+}
+
+
+#volumeSlider {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+    outline: none;
+    position: relative;
+    z-index: 5;
+    cursor: pointer;
+}
+
+
+#volumeSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #00f5ff;
+    box-shadow: 0 0 8px #00f5ff;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+#volumeSlider::-webkit-slider-thumb:active {
+    transform: scale(1.2);
+}
+
+
+.volume-tick {
+    position: absolute;
+    width: 3px;
+    height: 16px; 
+    background-color: rgba(255, 255, 255, 0.6);
+    z-index: 2;
+    pointer-events: none; /* Για να μην εμποδίζουν το πάτημα */
+    border-radius: 2px;
+}
+.tick-start { left: 1px; }
+.tick-center { left: 50%; transform: translateX(-50%); }
+.tick-end { right: 1px; }
+
+
+    </style>
+</head>
+<body>
+
+   
+    <svg width="0" height="0" style="position: absolute;">
+        <linearGradient id="instaGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#feda75" />
+            <stop offset="25%" stop-color="#fa7e1e" />
+            <stop offset="50%" stop-color="#d62976" />
+            <stop offset="75%" stop-color="#962fbf" />
+            <stop offset="100%" stop-color="#4f5bd5" />
+        </linearGradient>
+    </svg>
+
+    <div class="player-container">
+        
+       
+        <div class="widget-area">
+            <iframe class="widget-iframe" src="https://players.rcast.net/artistimageonly/200586" allow="autoplay"></iframe>
+        </div>
+
+       
+        <div class="controls-area">
+            
+            
+            <div class="title-mask-container">
+                <iframe id="metadataIframe" src="https://status.rcast.net/200586" scrolling="no"></iframe>
+            </div>
+
+<div class="volume-container">
+    
+    <div class="volume-label">Ένταση: <span id="volumeNumber">50</span>%</div>
+    
+    <div class="slider-wrapper">
+        
+        <div class="volume-tick tick-start"></div>
+        <div class="volume-tick tick-center"></div>
+        <div class="volume-tick tick-end"></div>
+        
+        
+        <input type="range" id="volumeSlider" min="0" max="100" value="50">
+    </div>
+</div>
+
+           
+            
+<div class="action-row">
+    
+    
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+        
+        <div id="currentDate" class="live-info-text">--/--</div>
+        
+        <a href="https://www.instagram.com/" target="_blank" class="social-link instagram" title="Instagram">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+            </svg>
+        </a>
+    </div>
+
+    
+    
+<div class="btn-play-wrapper">
+    <button class="btn-play ready" id="playBtn" title="Αναπαραγωγή">
+        <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+    </button>
+    <div class="gold-ring" id="goldRing"></div>
+</div>
+
+
+
+    
+    <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+        
+        <div id="currentTime" class="live-info-text">00:00</div>
+        
+        <a href="https://web.facebook.com/" target="_blank" class="social-link facebook" title="Facebook">
+            <svg viewBox="0 0 24 24">
+                <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
+            </svg>
+        </a>
+    </div>
+
+</div>
+
+    <audio id="audioPlayer" src="https://stream.rcast.net/200586" preload="none"></audio>
+
+    <script>
+        const audio = document.getElementById('audioPlayer');
+        const playBtn = document.getElementById('playBtn');
+        const playIcon = document.getElementById('playIcon');
+       
+      
+const playSVG = '<path d="M8 5v14l11-7z"/>';
+const pauseSVG = `
+    
+    <circle cx="7.5" cy="4" r="1.5" fill="#14141c"/>
+    <circle cx="16.5" cy="4" r="1.5" fill="#14141c"/>
+
+    
+    <path d="M6 14h3V7H6v7zm9-7v7h3V7h-3z"/>
+
+    
+    <path d="M4.5 16.5 C 4.5 22.5, 19.5 22.5, 19.5 16.5" fill="none" stroke="#14141c" stroke-width="2" stroke-linecap="round"/>
+`;
+
+
+
+        playBtn.addEventListener('click', () => {
+    if (audio.paused) {
+        
+        playBtn.classList.remove('ready', 'playing');
+        playBtn.classList.add('loading');
+        
+        audio.play()
+            .then(() => {
+               
+                playBtn.classList.remove('loading', 'ready');
+                playBtn.classList.add('playing');
+                playIcon.innerHTML = pauseSVG;
+            })
+            .catch(error => {
+               
+                playBtn.classList.remove('loading', 'playing');
+                playBtn.classList.add('ready');
+                alert("Αδυναμία φόρτωσης του σταθμού. Δοκιμάστε ξανά.");
+                console.error(error);
+            });
+    } else {
+        audio.pause();
+        audio.src = ""; 
+        audio.src = "https://stream.rcast.net/200586";
+        
+        
+        playBtn.classList.remove('playing', 'loading');
+        playBtn.classList.add('ready');
+        playIcon.innerHTML = playSVG;
+    }
+});
+
+
+        //
+        function refreshSongTitle() {
+            const iframe = document.getElementById('metadataIframe');
+            if (iframe) {
+                iframe.src = iframe.src; 
+            }
+        }
+        setInterval(refreshSongTitle, 10000);
+function updateClock() {
+    const now = new Date();
+    
+    
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    document.getElementById('currentDate').textContent = `${day}/${month}`;
+    
+   
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('currentTime').textContent = `${hours}:${minutes}`;
+}
+
+
+function updateClock() {
+    const now = new Date();
+    
+   
+    const optionsDay = { weekday: 'short' };
+    let dayName = now.toLocaleDateString('el-GR', optionsDay);
+    
+    dayName = dayName.charAt(0).toUpperCase() + dayName.slice(1);
+    
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const year = now.getFullYear();
+    
+    
+    document.getElementById('currentDate').textContent = `${dayName}, ${day}/${month}/${year}`;
+    
+    
+    let hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    
+   
+    const ampm = hours >= 12 ? 'Μμ' : 'Πμ';
+    
+    
+    hours = hours % 12;
+    hours = hours ? hours : 12; 
+    const strHours = String(hours).padStart(2, '0');
+    
+   
+    document.getElementById('currentTime').textContent = `${strHours}:${minutes}:${seconds} ${ampm}`;
+}
+
+
+updateClock();
+setInterval(updateClock, 1000);
+
+const volumeSlider = document.getElementById('volumeSlider');
+const volumeNumber = document.getElementById('volumeNumber');
+
+
+audio.volume = 0.5;
+
+
+volumeSlider.addEventListener('input', (e) => {
+    const volumeValue = e.target.value;
+    
+    
+    volumeNumber.textContent = volumeValue;
+    
+    
+    audio.volume = volumeValue / 100;
+});
+
+
+playBtn.addEventListener('click', () => {
+    
+    audio.volume = volumeSlider.value / 100;
+});
+
+
+</script>
+</body>
+</html>
